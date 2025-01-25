@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,7 +53,241 @@ body {
   </div>
   <script src="script.js"></script>
 </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        .form-container textarea, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .note-list {
+            margin-top: 20px;
+        }
+
+        .note-item {
+            background-color: #ffffff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .note-item p {
+            color: #555;
+        }
+
+        .note-item button {
+            margin-top: 10px;
+            background-color: #f44336;
+            color: white;
+            padding: 7px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .note-item button:hover {
+            background-color: #e53935;
+        }
+
+        .note-item .edit-btn {
+            background-color: #ffa500;
+        }
+
+        .note-item .edit-btn:hover {
+            background-color: #ff8c00;
+        }
+
+        .note-item .lock-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .note-item .lock-btn.locked {
+            color: #f44336;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Notes</h1>
+    <div class="form-container">
+        <textarea id="noteContent" placeholder="Enter your note here..."></textarea>
+        <button onclick="saveNote()">Save Note</button>
+    </div>
+
+    <div class="note-list" id="noteList">
+        <!-- Notes will be dynamically listed here -->
+    </div>
+</div>
+
+<script>
+    // Load existing notes from localStorage when the page is loaded
+    window.onload = function() {
+        displayNotes();
+    }
+
+    // Save a new note
+    function saveNote() {
+        const content = document.getElementById('noteContent').value;
+
+        if (!content) {
+            alert('Please enter some content!');
+            return;
+        }
+
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        notes.push({ content, locked: false, password: '' });
+        localStorage.setItem('notes', JSON.stringify(notes));
+
+        // Clear input field after saving
+        document.getElementById('noteContent').value = '';
+
+        displayNotes();
+    }
+
+    // Display all saved notes
+    function displayNotes() {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const noteList = document.getElementById('noteList');
+        noteList.innerHTML = '';
+
+        notes.forEach((note, index) => {
+            const noteDiv = document.createElement('div');
+            noteDiv.classList.add('note-item');
+            noteDiv.innerHTML = `
+                <p>${note.locked ? '🔐 [Locked] ' + getFirstWord(note.content) : note.content}</p>
+                <button class="edit-btn" onclick="editNote(${index})">Edit</button>
+                <button onclick="deleteNote(${index})">Delete</button>
+                <button class="lock-btn ${note.locked ? 'locked' : ''}" onclick="toggleLock(${index})">${note.locked ? '🔓 Unlock' : '🔐 Lock'}</button>
+            `;
+            noteList.appendChild(noteDiv);
+        });
+    }
+
+    // Get the first word of the note
+    function getFirstWord(text) {
+        return text.split(' ')[0];  // Splits the content by space and returns the first word
+    }
+
+    // Edit an existing note
+    function editNote(index) {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const note = notes[index];
+
+        if (note.locked) {
+            const password = prompt('This note is locked. Please enter the password to unlock it.');
+            if (password !== note.password) {
+                alert('Incorrect password!');
+                return;
+            }
+            // Unlock the note temporarily for editing
+            note.locked = false;
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+
+        document.getElementById('noteContent').value = note.content;
+
+        // Delete the note being edited to avoid duplication
+        deleteNote(index);
+    }
+
+    // Delete a note
+    function deleteNote(index) {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        notes.splice(index, 1);
+        localStorage.setItem('notes', JSON.stringify(notes));
+
+        displayNotes();
+    }
+
+    // Toggle lock/unlock for a note
+    function toggleLock(index) {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const note = notes[index];
+
+        if (note.locked) {
+            // Unlock the note
+            const password = prompt('Enter the password to unlock this note:');
+            if (password === note.password) {
+                note.locked = false;
+            } else {
+                alert('Incorrect password!');
+                return;
+            }
+        } else {
+            // Lock the note and set password if it's the first time
+            if (!note.password) {
+                const password = prompt('Enter a password to lock this note:');
+                note.password = password;
+            }
+            note.locked = true;
+        }
+
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+    }
+</script>
+
+</body>
 </html>
+
 
 
 
