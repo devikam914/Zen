@@ -1,0 +1,32 @@
+<!-- timer.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Stopper - Zen Achievements & Rewards</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to CSS for styling -->
+</head>
+<body>
+    <div class="timer-container">
+        <h2>Time Stopper</h2>
+        <p>Track the time you spend on your tasks</p>
+
+        <div id="timer">
+            <p id="display-time">00:00:00</p>
+            <div class="timer-buttons">
+                <button id="start-stop" onclick="startStopTimer()">Start</button>
+                <button id="reset" onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <p><a href="index.html">Back to Login</a></p>
+            <p><a href="achievements.html">Back to Achievements</a></p>
+        </div>
+    </div>
+
+    <script src="timer.js"></script> <!-- Link to JS for the timer functionality -->
+</body>
+</html>
