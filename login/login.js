@@ -17,5 +17,5 @@ document.querySelector('.login-form').addEventListener('submit', function (e) {
     console.log('User Password:', password);
     
     // Example redirect after successful login (you can replace with actual authentication)
-    window.location.href = "dashboard.html"; // Redirect to the main dashboard page
+    window.location.href = "../dashboard/dash.html"; // Redirect to the main dashboard page
 });

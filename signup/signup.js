@@ -32,5 +32,5 @@ document.querySelector('.signup-form').addEventListener('submit', function (e) {
     localStorage.setItem('users', JSON.stringify(existingUser));
 
     alert('Account created successfully!');
-    window.location.href = "index.html"; // Redirect to login page after successful signup
+    window.location.href = "../login/login.html"; // Redirect to login page after successful signup
 });
