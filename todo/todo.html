@@ -34,9 +34,9 @@
 
     .lists-container {
       display: flex;
-      gap: 20px; /* Space between the lists */
+      gap: 20px;
       flex-grow: 1;
-      margin-left: 20px; /* Push lists to the right */
+      margin-left: 20px;
     }
 
     .todo-list-container, .starred-list-container {
@@ -92,12 +92,12 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .todo-list li.completed span {
+    .todo-list li.completed span, .starred-list li.completed span {
       text-decoration: line-through;
       color: #aaa;
     }
 
-    .todo-list li span {
+    .todo-list li span, .starred-list li span {
       flex-grow: 1;
       margin-right: 10px;
       cursor: pointer;
@@ -124,6 +124,11 @@
 
     .todo-list li .star-button:hover {
       background-color: #d4af37;
+    }
+
+    .todo-list li button img {
+      width: 20px;
+      height: 20px;
     }
   </style>
 </head>
@@ -152,7 +157,7 @@
     function addTodo() {
       const todoInput = document.getElementById('todo-input');
       const todoText = todoInput.value.trim();
-      
+
       if (todoText === '') {
         alert('Please enter a task.');
         return;
@@ -164,6 +169,8 @@
       const li = document.createElement('li');
       const span = document.createElement('span');
       span.textContent = todoText;
+
+      // Toggle completed status when clicked (strikethrough)
       span.onclick = function () {
         li.classList.toggle('completed');
       };
@@ -185,13 +192,17 @@
       const deleteButton = document.createElement('button');
       const icon = document.createElement('img');
       icon.src = 'delete.png'; // Replace with your image path
-      icon.style.width = '20px';  // Optional: set the size of the image
-      icon.style.height = '20px'; // Optional: set the size of the image
+      icon.style.width = '20px';  // Ensure the icon size is consistent
+      icon.style.height = '20px'; // Ensure the icon size is consistent
       deleteButton.appendChild(icon); // Append the image to the button
 
+      // Delete the task from either list
       deleteButton.onclick = function () {
-        todoList.removeChild(li);
-        starredList.removeChild(li); // Ensure it gets removed from starred list too if present
+        if (todoList.contains(li)) {
+          todoList.removeChild(li); // Remove from todo list
+        } else {
+          starredList.removeChild(li); // Remove from starred list
+        }
       };
 
       li.appendChild(starButton);
