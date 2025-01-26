@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productivity Quotes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .quote-container {
+      text-align: center;
+      background: #ffffff;
+      padding: 20px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .quote {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .author {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .heart-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: #ff6b6b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .heart-button span {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .heart-button:hover {
+      transform: scale(1.1);
+    }
+
+    .new-quote {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .new-quote:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="quote-container">
+    <div id="quoteText" class="quote">Click the button to see a quote!</div>
+    <div id="quoteAuthor" class="author"></div>
+    <button class="heart-button" onclick="likeQuote()">
+      ❤️ <span id="likeCount">0</span>
+    </button>
+    <button class="new-quote" onclick="generateQuote()">Show Another Quote</button>
+  </div>
+
+  <script>
+    // Array of productivity quotes
+    const quotes = [
+      { text: "Success is the sum of small efforts repeated day in and day out.", author: "Robert Collier" },
+      { text: "Your limitation—it’s only your imagination.", author: "Unknown" },
+      { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+      { text: "Great things never come from comfort zones.", author: "Unknown" },
+      { text: "Dream it. Wish it. Do it.", author: "Unknown" },
+      { text: "Success doesn’t just find you. You have to go out and get it.", author: "Unknown" },
+      { text: "The harder you work for something, the greater you’ll feel when you achieve it.", author: "Unknown" },
+      { text: "Don’t stop when you’re tired. Stop when you’re done.", author: "Unknown" },
+      { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+      { text: "Do something today that your future self will thank you for.", author: "Unknown" }
+    ];
+
+    let currentQuoteIndex = null;
+    let likeCount = 0;
+
+    // Function to generate a random quote
+    function generateQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      currentQuoteIndex = randomIndex;
+      const quote = quotes[randomIndex];
+      document.getElementById("quoteText").textContent = `"${quote.text}"`;
+      document.getElementById("quoteAuthor").textContent = `- ${quote.author}`;
+      resetLikeCount();
+    }
+
+    // Function to like the current quote
+    function likeQuote() {
+      likeCount++;
+      document.getElementById("likeCount").textContent = likeCount;
+    }
+
+    // Reset like count when a new quote is generated
+    function resetLikeCount() {
+      likeCount = 0;
+      document.getElementById("likeCount").textContent = likeCount;
+    }
+
+    // Generate the first quote on page load
+    window.onload = generateQuote;
+  </script>
+</body>
+</html>
