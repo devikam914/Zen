@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen - Achievements & Rewards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .progress {
+            height: 20px;
+            width: 0%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+        }
+        .achievements-list, .rewards-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .achievement, .reward {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 220px;
+            text-align: center;
+        }
+        .achievement.locked {
+            background-color: #ebebeb;
+        }
+        .achievement img {
+            width: 60px;
+            height: 60px;
+        }
+        .badge, .reward-badge {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .points, .reward-points {
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Achievements & Rewards</h1>
+
+        <!-- Achievements Section -->
+        <div class="achievements-section">
+            <h2>Achievements</h2>
+            <div class="achievements-list">
+                <!-- Achievement 1 -->
+                <div class="achievement" id="achievement1">
+                    <img src="assets/done.png" alt="Task Completion">
+                    <h3>First Task Completed</h3>
+                    <p class="badge">Unlocked</p>
+                    <p class="points">+10 Points</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Achievement 2 -->
+                <div class="achievement locked" id="achievement2">
+                    <img src="assets/flame.png" alt="Task Completion">
+                    <h3>Complete 5 Tasks</h3>
+                    <p class="badge">Locked</p>
+                    <p class="points">+50 Points</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Achievement 3 -->
+                <div class="achievement" id="achievement3">
+                    <img src="assets/7days.png" alt="Streak Achievement">
+                    <h3>7 Days Streak</h3>
+                    <p class="badge">Unlocked</p>
+                    <p class="points">+30 Points</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Achievement 4 -->
+                <div class="achievement locked" id="achievement4">
+                    <img src="assets/timer.png" alt="Time Management">
+                    <h3>Complete 10 Pomodoros</h3>
+                    <p class="badge">Locked</p>
+                    <p class="points">+100 Points</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewards Section -->
+        <div class="rewards-section">
+            <h2>Rewards</h2>
+            <div class="rewards-panel">
+                <!-- Reward 1 -->
+                <div class="reward" id="reward1">
+                    <h3>Custom Background</h3>
+                    <p class="reward-badge">Unlocked</p>
+                    <p class="reward-points">Cost: 200 Points</p>
+                    <button onclick="useReward(1)">Use Now</button>
+                </div>
+                <!-- Reward 2 -->
+                <div class="reward" id="reward2">
+                    <h3>Zen Music Playlist</h3>
+                    <p class="reward-badge">Unlocked</p>
+                    <p class="reward-points">Cost: 300 Points</p>
+                    <button onclick="useReward(2)">Use Now</button>
+                </div>
+                <!-- Reward 3 -->
+                <div class="reward locked" id="reward3">
+                    <h3>Advanced Analytics</h3>
+                    <p class="reward-badge">Locked</p>
+                    <p class="reward-points">Cost: 500 Points</p>
+                    <button onclick="unlockReward(3)">Unlock</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userPoints = 150;  // Sample user points
+
+        // Function to update progress
+        function updateProgress(achievementId, progressPercentage) {
+            const achievementElement = document.getElementById(achievementId);
+            const progressBar = achievementElement.querySelector('.progress');
+            progressBar.style.width = progressPercentage + '%';
+
+            // Unlock achievement if progress reaches 100%
+            if (progressPercentage >= 100) {
+                achievementElement.classList.remove('locked');
+                achievementElement.querySelector('.badge').textContent = 'Unlocked';
+                userPoints += parseInt(achievementElement.querySelector('.points').textContent.replace('Points', '').trim());
+            }
+        }
+
+        // Function to unlock reward
+        function unlockReward(rewardId) {
+            const rewardElement = document.getElementById('reward' + rewardId);
+            if (userPoints >= 500) {  // Check if points are enough
+                rewardElement.classList.remove('locked');
+                rewardElement.querySelector('.reward-badge').textContent = 'Unlocked';
+                rewardElement.querySelector('button').textContent = 'Use Now';
+            } else {
+                alert("Not enough points to unlock this reward!");
+            }
+        }
+
+        // Function to use a reward
+        function useReward(rewardId) {
+            alert('You have used the reward!');
+            // Deduct points and update UI accordingly
+            if (rewardId == 1) {
+                userPoints -= 200;
+            } else if (rewardId == 2) {
+                userPoints -= 300;
+            }
+            console.log("Remaining points: " + userPoints);
+        }
+
+        // Example: updating achievements progress
+        updateProgress('achievement1', 100);  // Achievement 1: First task completed (100%)
+        updateProgress('achievement3', 70);   // Achievement 3: 7-day streak (70%)
+        updateProgress('achievement2', 40);   // Achievement 2: Complete 5 tasks (40%)
+    </script>
+
+<script src="ach.js"></script> <!-- Link to the JavaScript file -->
+
+</body>
+</html>
