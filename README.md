@@ -57,9 +57,9 @@ For Software:
 [Add any extra demo materials/links]
 
 ## Team Contributions
-- Devika M Nair: [Specific contributions]
-- Akshaya Mugin: [Specific contributions]
-- Aashika Kiran Nair: [Specific contributions]
+- Devika M Nair: To-do lists, image components
+- Akshaya Mugin: Notes, Mode changes, Orientation
+- Aashika Kiran Nair: Login, Signup skeletons
 
 ---
 Made with ❤️ at TinkerHub
