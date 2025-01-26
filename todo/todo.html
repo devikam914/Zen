@@ -154,78 +154,6 @@
   </div>
 
   <script>
-    const TODO_STORAGE_KEY = 'todoTasks';
-    const STARRED_STORAGE_KEY = 'starredTasks';
-
-    function saveToLocalStorage() {
-      const todoList = Array.from(document.querySelectorAll('#todo-list li')).map(li => {
-        return { text: li.querySelector('span').textContent, completed: li.classList.contains('completed') };
-      });
-      const starredList = Array.from(document.querySelectorAll('#starred-list li')).map(li => {
-        return { text: li.querySelector('span').textContent, completed: li.classList.contains('completed') };
-      });
-      localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(todoList));
-      localStorage.setItem(STARRED_STORAGE_KEY, JSON.stringify(starredList));
-    }
-
-    function loadFromLocalStorage() {
-      const todoList = JSON.parse(localStorage.getItem(TODO_STORAGE_KEY)) || [];
-      const starredList = JSON.parse(localStorage.getItem(STARRED_STORAGE_KEY)) || [];
-
-      todoList.forEach(task => addTaskToDOM(task.text, task.completed, false));
-      starredList.forEach(task => addTaskToDOM(task.text, task.completed, true));
-    }
-
-    function addTaskToDOM(text, completed = false, isStarred = false) {
-      const todoList = document.getElementById('todo-list');
-      const starredList = document.getElementById('starred-list');
-
-      const li = document.createElement('li');
-      if (completed) li.classList.add('completed');
-
-      const span = document.createElement('span');
-      span.textContent = text;
-      span.onclick = function () {
-        li.classList.toggle('completed');
-        saveToLocalStorage();
-      };
-
-      const starButton = document.createElement('button');
-      starButton.textContent = '★';
-      starButton.className = 'star-button';
-      starButton.onclick = function () {
-        if (!isStarred) {
-          todoList.removeChild(li);
-          starredList.appendChild(li);
-        } else {
-          starredList.removeChild(li);
-          todoList.appendChild(li);
-        }
-        saveToLocalStorage();
-      };
-
-      const deleteButton = document.createElement('button');
-      const icon = document.createElement('img');
-      icon.src = 'delete.png';
-      deleteButton.appendChild(icon);
-      deleteButton.onclick = function () {
-        li.parentNode.removeChild(li);
-        saveToLocalStorage();
-      };
-
-      li.appendChild(starButton);
-      li.appendChild(span);
-      li.appendChild(deleteButton);
-
-      if (isStarred) {
-        starredList.appendChild(li);
-      } else {
-        todoList.appendChild(li);
-      }
-
-      saveToLocalStorage();
-    }
-
     function addTodo() {
       const todoInput = document.getElementById('todo-input');
       const todoText = todoInput.value.trim();
@@ -235,11 +163,55 @@
         return;
       }
 
-      addTaskToDOM(todoText);
-      todoInput.value = '';
-    }
+      const todoList = document.getElementById('todo-list');
+      const starredList = document.getElementById('starred-list');
 
-    document.addEventListener('DOMContentLoaded', loadFromLocalStorage);
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.textContent = todoText;
+
+      // Toggle completed status when clicked (strikethrough)
+      span.onclick = function () {
+        li.classList.toggle('completed');
+      };
+
+      const starButton = document.createElement('button');
+      starButton.textContent = '★';
+      starButton.className = 'star-button';
+      starButton.onclick = function () {
+        // If the task is not in the starred list, add it there
+        if (!starredList.contains(li)) {
+          todoList.removeChild(li); // Remove from the regular list
+          starredList.appendChild(li); // Add to the starred list
+        } else {
+          starredList.removeChild(li); // Remove from starred list
+          todoList.appendChild(li); // Re-add to regular list
+        }
+      };
+
+      const deleteButton = document.createElement('button');
+      const icon = document.createElement('img');
+      icon.src = 'delete.png'; // Replace with your image path
+      icon.style.width = '20px';  // Ensure the icon size is consistent
+      icon.style.height = '20px'; // Ensure the icon size is consistent
+      deleteButton.appendChild(icon); // Append the image to the button
+
+      // Delete the task from either list
+      deleteButton.onclick = function () {
+        if (todoList.contains(li)) {
+          todoList.removeChild(li); // Remove from todo list
+        } else {
+          starredList.removeChild(li); // Remove from starred list
+        }
+      };
+
+      li.appendChild(starButton);
+      li.appendChild(span);
+      li.appendChild(deleteButton);
+      todoList.appendChild(li);
+
+      todoInput.value = ''; // Clear input field
+    }
   </script>
 </body>
 </html>
